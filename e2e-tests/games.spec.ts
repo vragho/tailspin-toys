@@ -138,6 +138,18 @@ test.describe('Game Listing and Navigation', () => {
     });
   });
 
+  test('should display category and publisher descriptions when available', async ({ page }) => {
+    await page.goto('/game/1');
+    await expect(page.getByTestId('game-details')).toBeVisible();
+
+    await expect(page.getByTestId('game-details-category-description')).toContainText(
+      'Collection of Strategy games available for crowdfunding',
+    );
+    await expect(page.getByTestId('game-details-publisher-description')).toContainText(
+      'CodeForge Studios is a game publisher seeking funding for exciting new titles',
+    );
+  });
+
   test('should display a button to back the game', async ({ page }) => {
     await test.step('Navigate to game details page', async () => {
       await page.goto('/game/1');
