@@ -4,7 +4,10 @@ import { categories, publishers, games } from '../../db/schema';
 import type { Database } from './db';
 import {
     getAllGames,
+    getAllCategories,
     getAllGameIds,
+    getAllPublishers,
+    getFilteredGames,
     getGameById,
 } from './games';
 
@@ -62,5 +65,72 @@ describe('games data-access helpers', () => {
     it('returns null for a non-existent game', async () => {
         await seedGames(db, 2);
         expect(await getGameById(db, 99999)).toBeNull();
+    });
+
+    it('filters games by one or more categories and a publisher', async () => {
+        const [strategy] = await db
+            .insert(categories)
+            .values({ name: 'Strategy', description: 'strategy' })
+            .returning({ id: categories.id });
+        const [puzzle] = await db
+            .insert(categories)
+            .values({ name: 'Puzzle', description: 'puzzle' })
+            .returning({ id: categories.id });
+        const [codeForge] = await db
+            .insert(publishers)
+            .values({ name: 'CodeForge Studios', description: 'publisher' })
+            .returning({ id: publishers.id });
+        const [devMasters] = await db
+            .insert(publishers)
+            .values({ name: 'DevMasters Inc.', description: 'publisher' })
+            .returning({ id: publishers.id });
+
+        await db.insert(games).values([
+            {
+                title: 'Strategy Forge',
+                description: 'A strategy game',
+                starRating: 4,
+                categoryId: strategy.id,
+                publisherId: codeForge.id,
+            },
+            {
+                title: 'Puzzle Forge',
+                description: 'A puzzle game',
+                starRating: 4,
+                categoryId: puzzle.id,
+                publisherId: codeForge.id,
+            },
+            {
+                title: 'Strategy Masters',
+                description: 'Another strategy game',
+                starRating: 4,
+                categoryId: strategy.id,
+                publisherId: devMasters.id,
+            },
+        ]);
+
+        const filtered = await getFilteredGames(db, {
+            categoryIds: [strategy.id, puzzle.id],
+            publisherId: codeForge.id,
+        });
+
+        expect(filtered.map((game) => game.title)).toEqual([
+            'Puzzle Forge',
+            'Strategy Forge',
+        ]);
+    });
+
+    it('returns an empty list when filters match no games', async () => {
+        await seedGames(db, 1);
+        const categoriesList = await getAllCategories(db);
+        expect(
+            await getFilteredGames(db, { categoryIds: [categoriesList[0].id], publisherId: 99999 }),
+        ).toEqual([]);
+    });
+
+    it('returns filter options ordered by name', async () => {
+        await seedGames(db, 1);
+        expect((await getAllCategories(db)).map((category) => category.name)).toEqual(['Strategy']);
+        expect((await getAllPublishers(db)).map((publisher) => publisher.name)).toEqual(['Pub One']);
     });
 });
