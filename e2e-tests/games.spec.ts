@@ -114,6 +114,15 @@ test.describe('Game Listing and Navigation', () => {
       await expect(gameDescription).not.toBeEmpty();
     });
 
+    await test.step('Verify category and publisher descriptions render when available', async () => {
+      const categorySection = page.getByTestId('game-details-category-section');
+      const publisherSection = page.getByTestId('game-details-publisher-section');
+      await expect(categorySection).toBeVisible();
+      await expect(publisherSection).toBeVisible();
+      await expect(page.getByTestId('game-details-category-description')).not.toBeEmpty();
+      await expect(page.getByTestId('game-details-publisher-description')).not.toBeEmpty();
+    });
+
     await test.step('Verify publisher or category information is present', async () => {
       const publisherExists = await page.getByTestId('game-details-publisher').isVisible();
       const categoryExists = await page.getByTestId('game-details-category').isVisible();

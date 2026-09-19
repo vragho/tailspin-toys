@@ -15,8 +15,10 @@ const gameSelection = {
     starRating: games.starRating,
     categoryId: categories.id,
     categoryName: categories.name,
+    categoryDescription: categories.description,
     publisherId: publishers.id,
     publisherName: publishers.name,
+    publisherDescription: publishers.description,
 };
 
 type GameSelectionRow = {
@@ -26,8 +28,10 @@ type GameSelectionRow = {
     starRating: number | null;
     categoryId: number | null;
     categoryName: string | null;
+    categoryDescription: string | null;
     publisherId: number | null;
     publisherName: string | null;
+    publisherDescription: string | null;
 };
 
 function mapGame(row: GameSelectionRow): Game {
@@ -38,11 +42,19 @@ function mapGame(row: GameSelectionRow): Game {
         starRating: row.starRating,
         category:
             row.categoryId !== null && row.categoryName !== null
-                ? { id: row.categoryId, name: row.categoryName }
+                ? {
+                      id: row.categoryId,
+                      name: row.categoryName,
+                      description: row.categoryDescription,
+                  }
                 : null,
         publisher:
             row.publisherId !== null && row.publisherName !== null
-                ? { id: row.publisherId, name: row.publisherName }
+                ? {
+                      id: row.publisherId,
+                      name: row.publisherName,
+                      description: row.publisherDescription,
+                  }
                 : null,
     };
 }
@@ -101,7 +113,7 @@ export async function getAllGames(db: Database): Promise<Game[]> {
  */
 export async function getAllCategories(db: Database): Promise<Category[]> {
     const rows = await db
-        .select({ id: categories.id, name: categories.name })
+        .select({ id: categories.id, name: categories.name, description: categories.description })
         .from(categories)
         .orderBy(asc(categories.name));
     return rows;
@@ -115,7 +127,7 @@ export async function getAllCategories(db: Database): Promise<Category[]> {
  */
 export async function getAllPublishers(db: Database): Promise<Publisher[]> {
     const rows = await db
-        .select({ id: publishers.id, name: publishers.name })
+        .select({ id: publishers.id, name: publishers.name, description: publishers.description })
         .from(publishers)
         .orderBy(asc(publishers.name));
     return rows;
