@@ -40,6 +40,14 @@ ALL UI components MUST use dark theme colors:
 - Mobile-first approach
 - Ensure readability on all screen sizes
 
+## TypeScript and Linting Standards
+
+- Prefer explicit TypeScript types for exported functions, props, and helpers; avoid vague `any` values or inferred-only public APIs.
+- Use type-only imports where appropriate (`import type`) so the code remains explicit and lint-friendly.
+- Keep comments focused on intent, trade-offs, and constraints rather than re-stating the implementation.
+- Treat stale comments as bugs: update or remove them when the surrounding code changes.
+- ESLint is the primary enforcement layer for code quality in this repo; the config keeps no-unused-vars checks and consistent type-import usage enabled.
+
 ## Utility Classes
 
 - Prefer utility classes over custom CSS when possible

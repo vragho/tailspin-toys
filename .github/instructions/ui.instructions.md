@@ -51,6 +51,14 @@ Refer to technology-specific instruction files:
 - Use props for configuration, not duplication
 - Document component APIs with TypeScript types
 
+## Documentation and Commenting
+
+- Comment intent, not mechanics. Explain why a decision exists, the trade-off behind it, or the non-obvious constraint the code is working around.
+- Do not restate what the code already says. If a block is obvious from the function name and implementation, prefer no comment at all.
+- Keep comments current. When the related code changes, update or remove stale comments in the same change.
+- Document reusable component contracts with a clear `Props` interface and a short summary when the component's API is not obvious from the type names alone.
+- Exported functions in `db/` and `src/lib/` should use TSDoc/JSDoc that explains purpose, parameters, and return values so the testing and data-layer patterns stay discoverable.
+
 ## Development Workflow
 
 1. **Choose the right tool**: 

@@ -27,6 +27,16 @@ export default [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      // Prefer type-only imports so public types and implementation imports stay explicit.
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports", fixStyle: "inline-type-imports" },
+      ],
+      // Encourage useful comments while avoiding stale TODO/FIXME noise.
+      "no-warning-comments": [
+        "warn",
+        { terms: ["TODO", "FIXME", "XXX"], location: "start" },
+      ],
     },
   },
 
