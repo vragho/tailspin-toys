@@ -56,6 +56,15 @@ npm run db:setup      # migrate + seed (run automatically by predev/prebuild)
 > [!NOTE]
 > Seeding is idempotent — it skips games that already exist (matched by title) rather than reconciling changed rows. CI always starts from a clean database, so it reflects `games.csv` exactly. Locally, if you edit or remove rows in `games.csv`, delete `tailspin.db` and re-run `npm run db:setup` to fully regenerate.
 
+## Coding standards
+
+This repository keeps documentation and comments focused on intent, trade-offs, and non-obvious decisions rather than restating the code. The project guidance in `.github/instructions/` is the source of truth for:
+
+- Commenting conventions: explain why the code exists, not what it does line by line
+- TSDoc/JSDoc requirements for exported functions in `db/` and `src/lib/`, including `@param` and `@returns` descriptions
+- Props/interface documentation for reusable `.astro` components
+- TypeScript formatting expectations and lint enforcement via ESLint
+
 ## Running tests
 
 ```bash
