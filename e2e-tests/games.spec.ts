@@ -24,6 +24,49 @@ test.describe('Game Listing and Navigation', () => {
     });
   });
 
+  test('should filter games by category and publisher together', async ({ page }) => {
+    await page.goto('/');
+
+    await test.step('Filter by the Strategy category', async () => {
+      await page.getByLabel('Strategy', { exact: true }).check();
+      await expect(page.getByTestId('filter-status')).toHaveText(/Showing 4 games/);
+    });
+
+    await test.step('Combine the category filter with a publisher filter', async () => {
+      await page.getByLabel('Publisher', { exact: true }).selectOption({ label: 'CodeForge Studios' });
+      await expect(page.getByTestId('filter-status')).toHaveText('Showing 1 game');
+      await expect(page.getByTestId('game-card').filter({ hasText: 'DevOps Dominion' })).toBeVisible();
+      await expect(page.getByTestId('game-card').filter({ hasText: 'Pipeline Conquest' })).toBeHidden();
+    });
+  });
+
+  test('should support multiple categories and clearing filters', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByLabel('Strategy', { exact: true }).check();
+    await page.getByLabel('Puzzle', { exact: true }).check();
+    await expect(page.getByTestId('filter-status')).toHaveText(/Showing 8 games/);
+
+    await page.getByTestId('reset-filters').click();
+    await expect(page.getByTestId('filter-status')).toHaveText(/Showing 21 games/);
+    await expect(page.getByLabel('Strategy', { exact: true })).not.toBeChecked();
+    await expect(page.getByLabel('Publisher', { exact: true })).toHaveValue('');
+  });
+
+  test('should show an empty state when no games match', async ({ page }) => {
+    await page.goto('/');
+    const publisherFilter = page.getByTestId('publisher-filter');
+
+    await publisherFilter.evaluate((select) => {
+      const option = new Option('Missing Publisher', '99999');
+      select.append(option);
+    });
+    await publisherFilter.selectOption('99999');
+
+    await expect(page.getByTestId('filter-status')).toHaveText('Showing 0 games');
+    await expect(page.getByTestId('filtered-empty-state')).toBeVisible();
+  });
+
   test('should navigate to correct game details page when clicking on a game', async ({ page }) => {
     let gameId: string | null;
     let gameTitle: string | null;
