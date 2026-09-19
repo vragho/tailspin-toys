@@ -8,14 +8,14 @@
 export interface Publisher {
     id: number;
     name: string;
-    description: string | null;
+    description?: string | null;
 }
 
 /** Represents a game category related to a game. */
 export interface Category {
     id: number;
     name: string;
-    description: string | null;
+    description?: string | null;
 }
 
 /** Represents a game with its related category and publisher. */

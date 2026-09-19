@@ -49,17 +49,21 @@ if (!game) {
         </div>
 
         {(game.category?.description || game.publisher?.description) && (
-          <div class="grid gap-4 sm:grid-cols-2 mb-6" data-testid="game-details-context">
+          <div class="mt-6 space-y-4 rounded-xl border border-slate-700 bg-slate-900/40 p-4" data-testid="game-details-entity-info">
             {game.category?.description && (
-              <section class="rounded-lg border border-slate-700 bg-slate-900/50 p-4" data-testid="game-details-category-description">
-                <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">About this category</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-400">{game.category.description}</p>
+              <section aria-labelledby="category-details-heading" data-testid="game-details-category-section">
+                <h2 id="category-details-heading" class="text-lg font-semibold text-slate-200 mb-2">Category</h2>
+                <p class="text-slate-300" data-testid="game-details-category-description">
+                  {game.category.description}
+                </p>
               </section>
             )}
             {game.publisher?.description && (
-              <section class="rounded-lg border border-slate-700 bg-slate-900/50 p-4" data-testid="game-details-publisher-description">
-                <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">About this publisher</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-400">{game.publisher.description}</p>
+              <section aria-labelledby="publisher-details-heading" data-testid="game-details-publisher-section">
+                <h2 id="publisher-details-heading" class="text-lg font-semibold text-slate-200 mb-2">Publisher</h2>
+                <p class="text-slate-300" data-testid="game-details-publisher-description">
+                  {game.publisher.description}
+                </p>
               </section>
             )}
           </div>
